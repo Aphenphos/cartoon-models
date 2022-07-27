@@ -3,35 +3,33 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 
-const { cats } = require('../models/cats');
 
-describe('cats routes', () => {
+
+describe('tests', () => {
   beforeEach(() => {
     return setup(pool);
   });
-
-  it('/cats should return a list of cats', async () => {
-    const res = await request(app).get('/cats');
-    const expected = cats.map((cat) => {
-      return { id: cat.id, name: cat.name };
+  it('gets list of cats', async () => {
+    const resp = await request(app).get('/cats');
+    expect(resp.body.length).toEqual(8);
+    expect(resp.body[0]).toEqual({
+      id: expect.any(String),
+      name: expect.any(String),
     });
-    expect(res.body).toEqual(expected);
   });
-
-  it('/cats/:id should return cat detail', async () => {
-    const res = await request(app).get('/cats/1');
-    const felix = {
-      id: '1',
-      name: 'Felix',
-      type: 'Tuxedo',
-      url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Felix_the_cat.svg/200px-Felix_the_cat.svg.png',
-      year: 1892,
-      lives: 3,
-      isSidekick: false,
-    };
-    expect(res.body).toEqual(felix);
+  it('get /cats/2 shows cat id stuff', async () => {
+    const resp = await request(app).get('/cats/2');
+    console.log(resp.body);
+    expect(resp.body).toEqual({
+      id:'2',
+      name:'Garfield',
+      type:'Orange Tabby',
+      url:'https://static.wikia.nocookie.net/garfield/images/9/9f/GarfieldCharacter.jpg',
+      year:'1978',
+      lives:'7',
+      isSidekick:false
+    });
   });
-
   afterAll(() => {
     pool.end();
   });
