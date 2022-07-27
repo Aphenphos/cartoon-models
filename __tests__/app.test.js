@@ -3,7 +3,7 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 
-const { cats } = require('../data/cats');
+const { cats } = require('../models/cats');
 
 describe('cats routes', () => {
   beforeEach(() => {
